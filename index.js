@@ -2,7 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const { sql, poolPromise } = require('./db');
+const jwt = require('jsonwebtoken');
 
+const jwt_secret = 'mbrella_key';
 const app = express();
 const PORT = 5000;
 
@@ -13,6 +15,9 @@ app.use(express.json());
 // Test route
 app.get('/', (req, res) => {
     res.send('Server running successfully');
+    console.log('server running successfully')
+
+    
 });
 
 
@@ -40,11 +45,28 @@ app.post('/api/login', async (req, res) => {
 
         if (result.recordset.length > 0) {
 
-                res.json({
-                message: 'Login successful',
-                user: result.recordset[0]
+            const user = result.recordset[0];
 
-            });
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    username: user.username
+                },
+
+                jwt_secret,
+
+                {expiresIn: '1h'}
+            );
+            res.json({
+                message: "login successfull",
+                token: token
+            })
+
+                // res.json({
+                // message: 'Login successful',
+                // user: result.recordset[0]
+
+            // });
 
         } else {
 

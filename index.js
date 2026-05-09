@@ -1,10 +1,11 @@
-
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { sql, poolPromise } = require('./db');
 const jwt = require('jsonwebtoken');
+const verifytoken = require('./middleware/auth');
 
-const jwt_secret = 'mbrella_key';
+const jwt_secret = process.env.jwt_secret;
 const app = express();
 const PORT = 5000;
 
@@ -19,6 +20,17 @@ app.get('/', (req, res) => {
 
     
 });
+
+
+//Dashboard protected API Routes
+app.get('/api/dashboard', verifytoken, async(req,res)=>{
+
+    res.json ({
+        message: "protected data",
+        user: req.user
+    })
+
+})
 
 
 // Login Route (NOW CONNECTED TO DB)
@@ -46,6 +58,8 @@ app.post('/api/login', async (req, res) => {
         if (result.recordset.length > 0) {
 
             const user = result.recordset[0];
+                //JWT Token creation //
+
 
             const token = jwt.sign(
                 {

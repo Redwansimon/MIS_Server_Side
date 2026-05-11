@@ -20,7 +20,7 @@ const config = {
 const poolPromise = new sql.ConnectionPool(config)
 .connect()
 .then(pool=>{
-    console.log('Database Connected');
+    // console.log('Database Connected');
     return pool;
 })
 .catch(err=>{

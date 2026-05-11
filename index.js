@@ -76,11 +76,7 @@ app.post('/api/login', async (req, res) => {
                 token: token
             })
 
-                // res.json({
-                // message: 'Login successful',
-                // user: result.recordset[0]
-
-            // });
+            
 
         } else {
 

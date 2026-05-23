@@ -107,7 +107,6 @@ app.get('/api/shop', async (req, res) => {
     STORE_CODE,
     STORE_NAME,
     ADDRESS1,
-    
     CITY,
     PHONE,
     EMAIL,

@@ -1,16 +1,39 @@
 require('dotenv').config();
+
+
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
 const express = require('express');
 const cors = require('cors');
 const { sql, MIS_DBpoolPromise, muadPoolPromise } = require('./db');
-const jwt = require('jsonwebtoken');
 const verifytoken = require('./middleware/auth');
+const verifySession = require('./middleware/auth');
 
 const jwt_secret = process.env.jwt_secret;
 const app = express();
 const PORT = 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+
+app.use(cookieParser());
+
+app.use(session({
+    secret: jwt_secret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        
+    }
+}));
+
 app.use(express.json());
 
 // Test route
@@ -23,7 +46,7 @@ app.get('/', (req, res) => {
 
 
 //Dashboard protected API Routes
-app.get('/api/dashboard', verifytoken, async (req, res) => {
+app.get('/api/dashboard', verifySession, async (req, res) => {
 
     res.json({
         message: "protected data",
@@ -58,23 +81,19 @@ app.post('/api/login', async (req, res) => {
         if (result.recordset.length > 0) {
 
             const user = result.recordset[0];
-            //JWT Token creation //
 
 
-            const token = jwt.sign(
-                {
-                    id: user.id,
-                    username: user.username
-                },
+            // CREATE SESSION
+            req.session.user = {
+                id: user.id,
+                username: user.username
+            };
 
-                jwt_secret,
-
-                { expiresIn: '1h' }
-            );
             res.json({
-                message: "login successfull",
-                token: token
-            })
+                message: "login successful",
+                user: req.session.user
+            });
+
 
 
 
@@ -93,6 +112,15 @@ app.post('/api/login', async (req, res) => {
         });
 
     }
+});
+
+//LOGOUT
+
+app.post('/api/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.clearCookie("connect.sid");
+        res.json({ message: "Logged out" });
+    });
 });
 
 //api for shopdetails route

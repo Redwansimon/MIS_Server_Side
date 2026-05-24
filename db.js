@@ -41,7 +41,6 @@ const config_1 = {
     }
 };
 
-
 const MIS_DBpoolPromise = new sql.ConnectionPool(config_1)
 .connect()
 .then(pool=>{
@@ -53,7 +52,9 @@ const MIS_DBpoolPromise = new sql.ConnectionPool(config_1)
 })
 
 module.exports = {
+
     sql,
     MIS_DBpoolPromise,
     muadPoolPromise
+
 };

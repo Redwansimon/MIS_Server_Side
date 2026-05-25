@@ -8,7 +8,7 @@ const config = {
     server: '202.4.106.203',
     port:1432,
 
-    database : 'Muad_WH',
+    database : 'Mbrella_WH',
 
     options: {
         trustServerCertificate: true,

@@ -45,7 +45,8 @@ app.get('/', (req, res) => {
 });
 
 
-//Dashboard protected API Routes
+//Dashboard protected API Routes---------------------------------------Dashboard
+
 app.get('/api/dashboard', verifySession, async (req, res) => {
 
     res.json({
@@ -56,7 +57,7 @@ app.get('/api/dashboard', verifySession, async (req, res) => {
 })
 
 
-// Login Route (NOW CONNECTED TO DB)
+// Login Route (NOW CONNECTED TO DB)-----------------------------Login
 app.post('/api/login', async (req, res) => {
 
     const { username, password } = req.body;
@@ -95,8 +96,6 @@ app.post('/api/login', async (req, res) => {
             });
 
 
-
-
         } else {
 
             res.json({
@@ -114,7 +113,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-//LOGOUT
+//------------------------------------------------LOGOUT
 
 app.post('/api/logout', (req, res) => {
     req.session.destroy(() => {
@@ -123,7 +122,7 @@ app.post('/api/logout', (req, res) => {
     });
 });
 
-//api for shopdetails route
+//---------------------------------------------api for shopdetails route
 
 app.get('/api/shop', async (req, res) => {
 
@@ -131,17 +130,7 @@ app.get('/api/shop', async (req, res) => {
 
         const pool = await muadPoolPromise;
         const result = await pool.request()
-            .query(`SELECT 
-    STORE_CODE,
-    STORE_NAME,
-    ADDRESS1,
-    CITY,
-    PHONE,
-    EMAIL,
-    VATREGNO,
-    STORETYPE,
-    STATUS
-FROM STORE;`)
+            .query(`SELECT STORE_CODE,STORE_NAME,ADDRESS1, CITY,PHONE,EMAIL,VATREGNO,STORETYPE,STATUS FROM STORE;`)
         res.json(result.recordset);
 
     }

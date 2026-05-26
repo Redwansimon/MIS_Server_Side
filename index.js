@@ -142,6 +142,32 @@ app.get('/api/shop', async (req, res) => {
 
 })
 
+// app.get('/api/shockreport',async (req,res)=>{
+
+//     try{
+
+//     }
+
+
+// })
+
+
+app.get("/api/stockreports", async (req, res) => {
+    try {
+
+        const pool = await MIS_DBpoolPromise;
+        const result = await pool.request()
+        .query(`SELECT * 
+            FROM MIS_DB.dbo.stockreports;`)
+       
+
+        res.json(result.recordset);
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error loading stock reports");
+    }
+});
 
 // Start server
 app.listen(PORT, () => {

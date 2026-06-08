@@ -169,7 +169,7 @@ app.get("/api/stockreports", async (req, res) => {
     }
 });
 
-// Start server
+//----------------------------------------------- Start server-------
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

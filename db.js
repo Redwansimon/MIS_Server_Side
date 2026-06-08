@@ -16,10 +16,11 @@ const config = {
     }
 };
 
-const muadPoolPromise = new sql.ConnectionPool(config)
+const mbrellaPoolPromise = new sql.ConnectionPool(config)
 .connect()
 .then(pool=>{
     return pool;
+    
 })
 .catch(err=>{
     console.log("db error",err)
@@ -55,6 +56,6 @@ module.exports = {
 
     sql,
     MIS_DBpoolPromise,
-    muadPoolPromise
+    mbrellaPoolPromise
 
 };

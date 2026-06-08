@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const express = require('express');
 const cors = require('cors');
-const { sql, MIS_DBpoolPromise, muadPoolPromise } = require('./db');
+const { sql, MIS_DBpoolPromise, mbrellaPoolPromise } = require('./db');
 const verifytoken = require('./middleware/auth');
 const verifySession = require('./middleware/auth');
 
@@ -128,7 +128,7 @@ app.get('/api/shop', async (req, res) => {
 
     try {
 
-        const pool = await muadPoolPromise;
+        const pool = await mbrellaPoolPromise;
         const result = await pool.request()
             .query(`SELECT STORE_CODE,STORE_NAME,ADDRESS1, CITY,PHONE,EMAIL,VATREGNO,STORETYPE,STATUS FROM STORE;`)
         res.json(result.recordset);
@@ -158,7 +158,7 @@ app.get("/api/stockreports", async (req, res) => {
         const pool = await MIS_DBpoolPromise;
         const result = await pool.request()
         .query(`SELECT * 
-            FROM MIS_DB.dbo.stockreports;`)
+            FROM MIS_DB.dbo.stockreports where STORE_NAME='FENI';`)
        
 
         res.json(result.recordset);

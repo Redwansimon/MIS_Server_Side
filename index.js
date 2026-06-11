@@ -36,7 +36,7 @@ app.use(session({
 
 app.use(express.json());
 
-// Test route
+// Test route---this is sometest
 app.get('/', (req, res) => {
     res.send('Server running successfully');
     console.log('server running successfully')

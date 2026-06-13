@@ -142,14 +142,7 @@ app.get('/api/shop', async (req, res) => {
 
 })
 
-// app.get('/api/shockreport',async (req,res)=>{
 
-//     try{
-
-//     }
-
-
-// })
 
 
 app.get("/api/stockreports", async (req, res) => {
@@ -158,7 +151,7 @@ app.get("/api/stockreports", async (req, res) => {
         const pool = await MIS_DBpoolPromise;
         const result = await pool.request()
         .query(`SELECT * 
-            FROM MIS_DB.dbo.stockreports where STORE_NAME='FENI';`)
+            FROM MIS_DB.dbo.stockreports ;`)
        
 
         res.json(result.recordset);
@@ -168,6 +161,18 @@ app.get("/api/stockreports", async (req, res) => {
         res.status(500).send("Error loading stock reports");
     }
 });
+//----------------------------------------------------------CROSS TABLE--------------------------
+
+app.get("/api/crossTable", async (req,res)=>{
+
+    try{
+
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send("Error Loading Cross Table report");
+    }
+})
 
 //----------------------------------------------- Start server-------
 app.listen(PORT, () => {

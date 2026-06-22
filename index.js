@@ -151,7 +151,7 @@ app.get("/api/stockreports", async (req, res) => {
         const pool = await MIS_DBpoolPromise;
         const result = await pool.request()
         .query(`SELECT * 
-            FROM MIS_DB.dbo.stockreports where STORE_NAME = 'RANGPUR' ;`)
+            FROM MIS_DB.dbo.stockreports  ;`)   //where STORE_NAME = 'RANGPUR'
        
 
         res.json(result.recordset);

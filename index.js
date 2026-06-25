@@ -145,22 +145,75 @@ app.get('/api/shop', async (req, res) => {
 
 
 
-app.get("/api/stockreports", async (req, res) => {
-    try {
+// app.get("/api/stockreports", async (req, res) => {
+//     try {
 
-        const pool = await MIS_DBpoolPromise;
-        const result = await pool.request()
-        .query(`SELECT * 
-            FROM MIS_DB.dbo.stockreports  ;`)   //where STORE_NAME = 'RANGPUR'
+//         const pool = await MIS_DBpoolPromise;
+//         const result = await pool.request()
+//         .query(`SELECT * 
+//             FROM MIS_DB.dbo.stockreports  ;`)   //where STORE_NAME = 'RANGPUR'
        
 
-        res.json(result.recordset);
+//         res.json(result.recordset);
 
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error loading stock reports");
-    }
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).send("Error loading stock reports");
+//     }
+// });
+app.get("/api/stockreports", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 100;
+    const offset = (page - 1) * limit;
+    const shop = req.query.shop || "";
+
+    const pool = await MIS_DBpoolPromise;
+
+    // ALL হলে WHERE ছাড়া, নির্দিষ্ট shop হলে WHERE সহ
+    const whereClause = shop === "ALL" ? "" : "WHERE STORE_NAME = @shop";
+
+    // TOTAL COUNT
+    const countRequest = pool.request();
+    if (shop !== "ALL") countRequest.input("shop", shop);
+
+    const countResult = await countRequest.query(`
+      SELECT COUNT(*) AS total
+      FROM MIS_DB.dbo.stockreports
+      ${whereClause}
+    `);
+
+    const total = countResult.recordset[0].total;
+
+    // PAGINATED DATA
+    const dataRequest = pool.request();
+    if (shop !== "ALL") dataRequest.input("shop", shop);
+    dataRequest.input("offset", offset);
+    dataRequest.input("limit", limit);
+
+    const result = await dataRequest.query(`
+      SELECT *
+      FROM MIS_DB.dbo.stockreports
+      ${whereClause}
+      ORDER BY BARCODE
+      OFFSET @offset ROWS
+      FETCH NEXT @limit ROWS ONLY
+    `);
+
+    res.json({
+      data: result.recordset,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error loading stock reports");
+  }
 });
+//--------------------------------------------------------------------------------------------------------------
+
 // //----------------------------------------------------CROSS TABLE----nothing added yet 6.16.2026----------------------
 // needs to work on it
 

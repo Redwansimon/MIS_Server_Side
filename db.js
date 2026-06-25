@@ -13,7 +13,9 @@ const config = {
     options: {
         trustServerCertificate: true,
         encrypt: false
-    }
+    },
+    requestTimeout: 60000,  // 15000 → 60000 (60 seconds)
+    connectionTimeout: 30000,
 };
 
 const mbrellaPoolPromise = new sql.ConnectionPool(config)
@@ -39,7 +41,9 @@ const config_1 = {
     options: {
         trustServerCertificate: true,
         encrypt: false
-    }
+    },
+        requestTimeout: 60000,  // 15000 → 60000 (60 seconds)
+    connectionTimeout: 30000,
 };
 
 const MIS_DBpoolPromise = new sql.ConnectionPool(config_1)

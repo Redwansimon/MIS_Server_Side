@@ -1,4 +1,9 @@
+
 require('dotenv').config();
+// ফাইলের উপরে require করো
+const excelDownloadRoute = require('./api/stockReport/stockReportExcel');
+const pdfDownloadRoute = require('./api/stockReport/stockReportPDF');
+
 
 
 const session = require("express-session");
@@ -212,6 +217,10 @@ app.get("/api/stockreports", async (req, res) => {
     res.status(500).send("Error loading stock reports");
   }
 });
+
+// routes এর মাঝে use করো
+app.use('/api/stockreports/download/excel', excelDownloadRoute);
+app.use('/api/stockreports/download/pdf', pdfDownloadRoute);
 //--------------------------------------------------------------------------------------------------------------
 
 // //----------------------------------------------------CROSS TABLE----nothing added yet 6.16.2026----------------------
